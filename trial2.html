@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="v/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="v/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="v/favicon-16x16.png">
+<link rel="manifest" href="v/site.webmanifest">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MVJ NOTICE BOARD</title>
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-storage.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+        #h {
+            text-align: right;
+            margin-top: 2%;
+            /* margin-bottom: 2%; */
+            padding-bottom: 2%;
+            position: fixed;
+            top: 2%;
+            right: 2%;
+        }
+
+        #i {
+            height: 25%;
+        }
+
+        #j {
+            margin-top: 2%;
+        }
+
+        #k {
+            margin-top: 2%;
+            /* margin-bottom: 2%; */
+            padding-bottom: 2%;
+            position: fixed;
+            bottom: 0;
+            left: 7%;
+        }
+
+        .a {
+  font-size: 20px;
+}
+.bb {
+  font-size: 17px;
+}
+.c {
+  font-size: 18px;
+}
+    </style>
+</head>
+<body>
+    
+    <center class="h2">NOTICE</center>
+    <div class="container">
+        <div class="row">
+           <b> <div class="col-md-6 p-1 list-group-itema a">REFERENCE</div></b>
+            <b><div class="col-md-6 p-1 list-group-itema a" id="h">2022-07-22</div></b>
+        </div>
+        <div class="row p-2"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <center><b class="list-group-itema a">Header</b></center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <center><img class="img-fluid list-group-itema" style="width: 60%; height: 400px;"
+                        src="https://firebasestorage.googleapis.com/v0/b/notice-d9188.appspot.com/o/any%20name.jpg?alt=media&token=d59b4209-2460-4a2a-a318-d4093e6ee6b8"
+                        alt="no"></center>
+            </div>
+        </div>
+        <div class="row" id="j">
+            <div class="col-md-12">
+                <center class="list-group-itema c"><b>MESSAGE</b></center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <center><b class="list-group-itema"></b></center>
+            </div>
+        </div>
+        <div class="row">
+            <b><div class="col-md-4 list-group-itema c" id="k">Tomorrow </div></b>
+            <div class="col-md-8"></div>
+        </div>
+
+    </div>
+    <style>
+       
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDYK-pacTGL3Q2ugGW12XhplpCBkrSob-A",
+            authDomain: "webdemo-572d9.firebaseapp.com",
+            projectId: "webdemo-572d9",
+            storageBucket: "webdemo-572d9.appspot.com",
+            messagingSenderId: "692981044266",
+            appId: "1:692981044266:web:ebdb142027ab2a4de35f53"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const notice = ["notice-1", "notice-2", "notice-3","notice-4", "notice-5", "notice-6","notice-7", "notice-8"];
+        var i = 0;
+        setInterval(() => {
+            const database = firebase.database().ref("Data/" + notice[i]);
+            const ListItems = document.getElementsByClassName("list-group-itema");
+            const Activate = document.getElementById("active");
+            var activeKey = "0";
+
+            Activate.addEventListener("click", () => {
+                if (activeKey == "0")
+                    database.update({
+                        active: "1"
+                    })
+                else
+                    database.update({
+                        active: "0"
+                    })
+            });
+            database.on("value", (snapshot) => {
+                const data = snapshot.val();
+                ListItems[4].textContent = "" + data.content;
+                ListItems[2].textContent = ""+ data.head_sec;
+                ListItems[0].textContent = "From:" + data.notice_ref;
+                ListItems[1].textContent =  data.time;
+                ListItems[6].textContent = "Validity:" + data.validity;
+                ListItems[3].src=data.url;
+
+                // Activate.style.display = "block";
+                // activeKey = data.active;
+                // if (data.active == "0")
+                //     Activate.textContent = "Activate";
+                // else
+                //     Activate.textContent = "Deactivate";
+            });
+
+            // function requestFullScreen(element) {
+            //     // Supports most browsers and their versions.
+            //     var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+            //     if (requestMethod) { // Native full screen.
+            //         requestMethod.call(element);
+            //     } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            //         var wscript = new ActiveXObject("WScript.Shell");
+            //         if (wscript !== null) {
+            //             wscript.SendKeys("{F11}");
+            //         }
+            //     }
+            // }
+
+            var elem = document.body; // Make the body go full screen.
+            // requestFullScreen(elem);
+            i++;
+            if (i >= 8)
+                i = 0;
+        }, 5000);
+
+    </script>
+
+<btn style="display: none;" class="btn btn-primary ms-5 " hidden id="active">Activate</button>
+</body>
+
+</html>
